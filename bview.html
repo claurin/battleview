@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Battle View Client</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+        <script src="util.js"></script>
+        <script src="account.js"></script>
+        <script src="bnet.js"></script>
+        <script src="app.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+        <link rel="stylesheet" href="bview.css">
+    </head>
+    <body>
+        <div id="app">
+            <div class="header">
+                {{header}}
+                <button type="button" v-on:click="load" class="command">Load</button>
+            </div>
+            <div>
+                <div v-for="char, key in characters" class="container divcell" :class="{selected: key==selectedIndex}" v-on:click="selectedIndex=key">
+                    <div class="divcell">
+                        <img alt="thumbnail" :src="char.imageSrc" class="thumbnail"/>
+                    </div>
+                    <div class="divcell">
+                        <div>{{char.name}}</div>      
+                        <div>{{char.raceObj.name}} {{char.classObj.name}}</div>
+                        <div>{{char.realm}} <span v-if="char.guild">{{char.guild.name}}</span></div>
+                    </div> 
+                    <div class="divcell">{{char.level}}</div> 
+                    <input name="selectGroup" type="radio" :value="key" v-model="selectedIndex" style="display:none;">
+                </div>
+            </div>
+            <div v-if="character">
+                <el-tabs v-model="activeTabName" style="margin-left:9px;">
+                    <el-tab-pane label="Description" name="desc">
+                        <table>
+                            <tr><td>Name:</td><td>{{character.name}}</td></tr>
+                            <tr><td>Level:</td><td>{{character.level}}</td></tr>
+                            <tr><td>Race:</td><td>{{character.raceObj.name}}</td></tr>
+                            <tr><td>Class:</td><td>{{character.classObj.name}}</td></tr>
+                            <tr><td>Realm:</td><td>{{character.realm}}</td></tr>
+                            <tr><td>Guild:</td><td v-if="character.guild">{{character.guild.name}}</td></tr>
+                        </table>
+                    </el-tab-pane>
+                    <el-tab-pane label="Professions" name="profs">
+                        <div v-if="character.professions.primary.length > 0">
+                            <div>Professions:</div>
+                            <div style="padding-left:10px;">
+                                <span v-for="profession in character.professions.primary" class="spanblock" >{{profession.name}} ({{profession.rank}})</span>
+                            </div>                            
+                        </div>                         
+                    </el-tab-pane>
+                </el-tabs>
+            </div>
+        </div>
+    </body> 
+</html>
